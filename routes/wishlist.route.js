@@ -42,4 +42,29 @@ router.get('/:wishlistId', async (req, res) => {
   }
 });
 
+router.delete('/:wishlistId/items/:itemId', async(req,res) => {
+  console.log("api called");
+  try {
+    const { wishlistId, itemId } = req.params;
+    // Find the wishlist by ID
+    const wishlist = await WishListSchema.findById(wishlistId);
+    if (!wishlist) {
+      return res.status(404).json({ message: 'Wishlist not found' });
+    }
+    // Check if the item exists in the wishlist
+    const itemIndex = wishlist.items.findIndex(item => item._id.toString() === itemId);
+    if (itemIndex === -1) {
+      return res.status(404).json({ message: 'Item not found in the wishlist' });
+    }
+    // Remove the item from the wishlist
+    wishlist.items.splice(itemIndex, 1);
+    // Save the updated wishlist
+    await wishlist.save();
+    res.json({ message: 'Item deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+})
+
 module.exports = router;
