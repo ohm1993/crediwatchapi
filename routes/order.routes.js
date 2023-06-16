@@ -30,10 +30,10 @@ router.post('/:orderId/items', async (req, res) => {
   }
 });
 
-router.get('/:orderId', async (req, res) => {
+router.get('/:userId', async (req, res) => {
   try {
-    const orderId = req.params.orderId;
-    const orderlist = await OrderSchema.find().populate({path:"orderitems",populate:{ path: 'product_id'}});
+    const userId = req.params.userId;
+    const orderlist = await OrderSchema.find({user_id:userId}).populate({path:"orderitems",populate:{ path: 'product_id'}});
     res.json({status:true,code:200,data:orderlist})
   } catch (err) {
     console.log("error is",err);
