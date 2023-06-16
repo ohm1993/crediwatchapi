@@ -14,6 +14,10 @@ let userSchema = new Schema({
     password: {
         type: String,
         required: true
+    },
+    wishlist:{
+      type: Schema.Types.ObjectId,
+      ref: 'WishListSchema',
     }
 }, {
     timestamps: true,

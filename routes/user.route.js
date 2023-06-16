@@ -22,7 +22,8 @@ router.route('/register').post((req, res, next) => {
 // api for login
 router.route('/login').post((req, res) => {
   if(req.body.email && req.body.password){
-    UserSchema.findOne({ email: req.body.email }).then(async(user) => {
+    UserSchema.findOne({ email: req.body.email }).populate({path:"wishlist"}).then(async(user) => {
+      console.log("user response is",user);
       const password_match = await user.comparePassword(req.body.password)
       if(password_match){
           var token = 'jjhddhjdhjhdj';

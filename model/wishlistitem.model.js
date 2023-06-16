@@ -9,7 +9,7 @@ let wishlistItemSchema = new Schema({
   },
   wishlist: {
     type: Schema.Types.ObjectId,
-    ref: 'wishlists',
+    ref: 'WishListSchema',
     required: true
   }
 },
