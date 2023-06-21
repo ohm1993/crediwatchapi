@@ -40,7 +40,7 @@ router.post('/:wishlistId/items', async (req, res) => {
 router.get('/:wishlistId', async (req, res) => {
   try {
     const wishlistId = req.params.wishlistId;
-    const wishlist = await WishListSchema.find().populate({path:"items",populate:{ path: 'product_id'}});
+    const wishlist = await WishListSchema.findById(wishlistId).populate({path:"items",populate:{ path: 'product_id'}});
     res.json({status:true,code:200,data:wishlist})
   } catch (err) {
     console.log("error is",err);

@@ -7,13 +7,23 @@ let UserSchema = require('../model/user.model');
 //api for registration
 router.route('/register').post((req, res, next) => {
       if(req.body.name && req.body.email && req.body.password){
-          UserSchema.create(req.body)
-          .then((result) => {
-            res.json({status:true,code:201,data:result})
+          UserSchema.findOne({ email: req.body.email }).then(async(user) => {
+             if(!user){
+               UserSchema.create(req.body)
+               .then((result) => {
+                 res.json({status:true,code:201,data:result})
+               })
+               .catch((err) => {
+                 res.json({status:false,code:500,message:err.message})
+               })
+             }else{
+               res.json({status:true,code:201,data:user})
+             }
           })
           .catch((err) => {
             res.json({status:false,code:500,message:err.message})
           })
+
       }else{
            res.json({status:false,code:400,message:"Bad Request"})
       }
@@ -41,6 +51,17 @@ router.route('/login').post((req, res) => {
     })
   }else{
        res.json({status:false,code:400,message:"Bad Request"})
+  }
+})
+
+router.route('/:userId').get(async(req, res) => {
+  try {
+    const user_id = req.params.userId;
+    const user = await UserSchema.findById(user_id).populate({path:"wishlist"});
+    res.json({status:true,code:201,data:user})
+  } catch (err) {
+    console.log("error is",err);
+    res.status(500).json({ error: 'failed to fetch user' });
   }
 })
 
