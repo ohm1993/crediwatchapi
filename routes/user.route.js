@@ -7,7 +7,7 @@ let UserSchema = require('../model/user.model');
 //api for registration
 router.route('/register').post((req, res, next) => {
       if(req.body.name && req.body.email && req.body.password){
-          UserSchema.findOne({ email: req.body.email }).then(async(user) => {
+          UserSchema.findOne({ email: req.body.email }).populate({path:"wishlist"}).then(async(user) => {
              if(!user){
                UserSchema.create(req.body)
                .then((result) => {
@@ -17,6 +17,7 @@ router.route('/register').post((req, res, next) => {
                  res.json({status:false,code:500,message:err.message})
                })
              }else{
+               console.log("comes here");
                res.json({status:true,code:201,data:user})
              }
           })
